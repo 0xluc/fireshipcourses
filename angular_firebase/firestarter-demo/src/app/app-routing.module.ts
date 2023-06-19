@@ -5,6 +5,10 @@ import { HomePageComponent } from './home-page/home-page.component';
 const routes: Routes = [
   {
     path: '', component: HomePageComponent
+  },
+  {
+    // load using lazyload for better performance
+    path: 'login', loadChildren: () => import('./user/user.module').then(m => m.UserModule)
   }
 ];
 
