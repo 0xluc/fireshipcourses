@@ -20,7 +20,7 @@ export class EmailLoginComponent implements OnInit{
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['',[]]
+      passwordConfirm: ['',[]]
     })
   }
   changeType(val:any){
