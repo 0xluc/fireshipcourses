@@ -24,11 +24,7 @@ export class BoardService {
       tasks: [{description: 'Hello!', label: 'yellow'}]
     })
   }
-  deleteBoard(boardId: string){
-    return this.db.collection('boards')
-    .doc(boardId)
-    .delete()
-  }
+
 
   updateBoard(boardId: string, task: Task[]){
     return this.db.collection('boards')
@@ -57,6 +53,34 @@ export class BoardService {
      batch.update(ref, {priority: idx});
    })
    batch.commit();
+  }
+  deleteBoard(boardId: string) {
+    return this.db
+      .collection('boards')
+      .doc(boardId)
+      .delete();
+  }
+
+  /**
+   * Updates the tasks on board
+   */
+  updateTasks(boardId: string, tasks: Task[]) {
+    return this.db
+      .collection('boards')
+      .doc(boardId)
+      .update({ tasks });
+  }
+
+  /**
+   * Remove a specifc task from the board
+   */
+  removeTask(boardId: string, task: Task) {
+    return this.db
+      .collection('boards')
+      .doc(boardId)
+      .update({
+        tasks: firebase.firestore.FieldValue.arrayRemove(task)
+      });
   }
 
 

@@ -11,29 +11,22 @@ import { TaskDialogComponent } from '../dialogs/task-dialog.component';
   styleUrls: ['./board.component.scss']
 })
 export class BoardComponent {
-  @Input() board: Board;
-
-  constructor(
-    private boardService: BoardService,
-    private dialog: MatDialog
-  ){}
+  @Input() board:any;
 
   taskDrop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.board.tasks!, event.previousIndex, event.currentIndex)
-    this.boardService.updateBoard(this.board.id!, this.board.tasks!);
+    moveItemInArray(this.board.tasks, event.previousIndex, event.currentIndex);
+    this.boardService.updateTasks(this.board.id, this.board.tasks);
   }
-  openDialog(task?: Task, idx?: number): void{
-    const newTask = {label: 'purple'}
+
+  openDialog(task?: Task, idx?: number): void {
+    const newTask = { label: 'purple' };
     const dialogRef = this.dialog.open(TaskDialogComponent, {
       width: '500px',
-      data: task ?  { task:
-        {...task},
-        isNew: false,
-        boardId: this.board.id,
-        idx}
-        : {task: newTask, isNew: true}
-      }
-    })
+      data: task
+        ? { task: { ...task }, isNew: false, boardId: this.board.id, idx }
+        : { task: newTask, isNew: true }
+    });
+
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         if (result.isNew) {
@@ -47,6 +40,12 @@ export class BoardComponent {
           this.boardService.updateTasks(this.board.id, this.board.tasks);
         }
       }
-    })
+    });
   }
+
+  handleDelete() {
+    this.boardService.deleteBoard(this.board.id);
+  }
+
+  constructor(private boardService: BoardService, private dialog: MatDialog) {}
 }
